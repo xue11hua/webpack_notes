@@ -105,7 +105,127 @@ const htmlPlugin=require('html-webpack-plugin');
             template:'./src/index.html'
         })
     ],
+#第八节
+css引入图片
+图片写成背景
+安装
+npm install --save-dev file-loader url-loader
+配置webpack.config.js
+ rules:[
+            {
+                test:/\.css$/,
+                use:[{
+                    loader:"style-loader"
+                },{
+                    loader:"css-loader"
+                }]
+            },{
+                test:/\.(png|jpg|gif)/,
+                use[{
+                    loader:'url-loader',
+                    options:{
+                        limit:50000
+                    }
+                }]
+            }
+        ]
+#第九节
+css分离
+安装
+npm install --save-dev extract-text-webpack-plugin
+如果出现错误
+Error: Chunk.entrypoints: Use Chunks.groupsIterable and filter by instanceof Entrypoint instead
 
+npm install extract-text-webpack-plugin@next
+配置
+webpack.config.js
+引入
+const extractTextPlugin=require('extract-text-webpack-plugin');
+  rules:[
+            {
+                test:/\.css$/,
+                use:extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                  })
+            },{
+                test:/\.(png|jpg|gif)/,
+                use:[{
+                    loader:'url-loader',
+                    options:{
+                        limit:500
+                    }
+                }]
+            }
+        ]
+       new extractTextPlugin("/css/index.css"),
+处理图片路径
+var website={
+    publicPath:'http://192.168.1.168:1717/'
+}
+ output:{//出口
+        path:path.resolve(__dirname,'dist'),
+        filename:'[name].js',
+        publicPath:website.publicPath
+    },
+#第十节
 
+图片打包到images文件夹下
+配置
+webpack.config.js
+ rules:[
+            {
+                test:/\.css$/,
+                use:extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                  })
+            },{
+                test:/\.(png|jpg|gif)/,
+                use:[{
+                    loader:'url-loader',
+                    options:{
+                        limit:500,
+                        outputPath:'images/'
+                    }
+                }]
+            }
+        ]
+局部安装webpack
+运行webpack
+配置
+package.json
+ "scripts": {
+    "server": "webpack-dev-server",
+    "build":"webpack"
+  },
+
+处理html中img引入图片
+安装国人写的
+cnpm insatll --save-dev html-withimg-loader
+配置
+webpack.config.js
+ rules:[
+            {
+                test:/\.css$/,
+                use:extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                  })
+            },{
+                test:/\.(png|jpg|gif)/,
+                use:[{
+                    loader:'url-loader',
+                    options:{
+                        limit:500,
+                        outputPath:'images/'
+                    }
+                }]
+            },
+            {
+                test:/\.(html|htm)$/,
+                use:[ 'html-withimg-loader'] 
+            }
+        ]
 
 
